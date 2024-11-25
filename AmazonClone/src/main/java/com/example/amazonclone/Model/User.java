@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NonNull;
 
+import java.util.ArrayList;
+
 @Data
 @AllArgsConstructor
 public class User {
@@ -32,4 +34,7 @@ public class User {
     @NotNull(message = "Balance Cannot Be Empty")
     @Min(value = 0, message = "Balance Cannot Be Less Than Zero")
     private double balance;
+
+    @Size(min = 10, message = "Review Cannot Be Less Than 10")
+    private String review;
 }

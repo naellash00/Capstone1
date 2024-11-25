@@ -1,5 +1,6 @@
 package com.example.amazonclone.Service;
 
+import com.example.amazonclone.Model.Product;
 import com.example.amazonclone.Model.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -65,5 +66,14 @@ public class UserService {
             }
         }
     }
+
+//    public void addUserPurchase(Product product){
+//        ArrayList<Product> purchasedProducts = new ArrayList<>();
+//        purchasedProducts.add(product);
+//    }
+//
+//    public ArrayList<Product> purchaseHistory(String userID){
+//        ArrayList<Product> purchasedProducts;
+//    }
 
 }

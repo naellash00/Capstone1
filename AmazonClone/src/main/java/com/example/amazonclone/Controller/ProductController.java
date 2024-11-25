@@ -56,5 +56,27 @@ public class ProductController {
         return ResponseEntity.status(400).body(new ApiResponse("Product ID Not Found"));
     }
 
+    // Extra endpoint 2
+    @PutMapping("/discount/{merchantid}/{productid}/{discountpercentage}")
+    public ResponseEntity applyDiscount(@PathVariable String merchantid, @PathVariable String productid, @PathVariable double discountpercentage) {
+        int discountResult = productServices.applyDiscount(merchantid, productid, discountpercentage);
+        if (discountResult == 1)
+            return ResponseEntity.status(400).body(new ApiResponse("Only Merchant Can Apply Discount On Product"));
+        else if (discountResult == 2)
+            return ResponseEntity.status(400).body(new ApiResponse("Product ID Not Found"));
+
+        return ResponseEntity.status(200).body(new ApiResponse("Discount Applied Successfully"));
+    }
+
+    //Extra endpoint 3
+    @GetMapping("/same/product/category/{categoryid}")
+    public ResponseEntity getProductsByCategory(@PathVariable String categoryid) {
+        ArrayList<Product> sameCategoryProducts = productServices.getProductsByCategory(categoryid);
+        if (sameCategoryProducts.isEmpty())
+            return ResponseEntity.status(400).body(new ApiResponse("Category ID Not Found"));
+
+        return ResponseEntity.status(200).body(sameCategoryProducts);
+    }
+
 
 }
