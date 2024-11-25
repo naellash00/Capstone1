@@ -78,5 +78,22 @@ public class ProductController {
         return ResponseEntity.status(200).body(sameCategoryProducts);
     }
 
+    //Extra Endpoint 5
+    @PostMapping("/add/review/{productid}/{userid}/{review}")
+    public ResponseEntity addReview(@PathVariable String productid, @PathVariable String userid, @PathVariable String review) {
+        int reviewResult = productServices.addReview(productid, userid, review);
+        if (reviewResult == 1)
+            return ResponseEntity.status(400).body(new ApiResponse("Product ID Not Found"));
+        else if (reviewResult == 2)
+            return ResponseEntity.status(400).body(new ApiResponse("User ID Not Found"));
+        else if (reviewResult == 3)
+            return ResponseEntity.status(400).body(new ApiResponse("Review Must Be Longer Than 5 Letters"));
+
+        return ResponseEntity.status(200).body(new ApiResponse("Review Added Successfully"));
+
+    }
+
+
+
 
 }

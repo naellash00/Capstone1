@@ -35,6 +35,4 @@ public class User {
     @Min(value = 0, message = "Balance Cannot Be Less Than Zero")
     private double balance;
 
-    @Size(min = 10, message = "Review Cannot Be Less Than 10")
-    private String review;
 }
