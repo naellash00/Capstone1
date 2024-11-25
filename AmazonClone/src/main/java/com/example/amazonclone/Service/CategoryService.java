@@ -36,4 +36,6 @@ public class CategoryService {
         }
         return false;
     }
+
+   // public boolean checkCategoryExist()
 }

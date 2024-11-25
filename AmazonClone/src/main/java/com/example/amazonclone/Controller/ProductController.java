@@ -18,48 +18,43 @@ public class ProductController {
     private final ProductService productServices;
 
     @GetMapping("/get")
-    public ResponseEntity getProducts(){
-        ArrayList<Product> products = productServices.getProducts();
+    public ResponseEntity getProducts() {
+        ArrayList<Product> products = productServices.getAllProducts();
         return ResponseEntity.status(200).body(products);
     }
 
     @PostMapping("/add")
-    public ResponseEntity addProduct(@RequestBody @Valid Product product, Errors errors){
-        if(errors.hasErrors())
+    public ResponseEntity addProduct(@RequestBody @Valid Product product, Errors errors) {
+        if (errors.hasErrors())
             return ResponseEntity.status(400).body(errors.getFieldError().getDefaultMessage());
 
-        productServices.addProduct(product);
-        return ResponseEntity.status(200).body(new ApiResponse("Product Added Successfully"));
+        boolean isAdded = productServices.addProduct(product);
+        if (isAdded)
+            return ResponseEntity.status(200).body(new ApiResponse("Product Added Successfully"));
+
+        return ResponseEntity.status(400).body(new ApiResponse("Category ID Dose Not Exist"));
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity updateProduct(@PathVariable String id, @RequestBody @Valid Product product, Errors errors){
+    public ResponseEntity updateProduct(@PathVariable String id, @RequestBody @Valid Product product, Errors errors) {
         boolean isUpdated = productServices.updateProduct(id, product);
-        if(errors.hasErrors())
+        if (errors.hasErrors())
             return ResponseEntity.status(400).body(errors.getFieldError().getDefaultMessage());
 
-        if(isUpdated)
+        if (isUpdated)
             return ResponseEntity.status(200).body(new ApiResponse("Product Updated Successfully"));
 
         return ResponseEntity.status(400).body(new ApiResponse("Product ID Not Found"));
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity deleteProduct(@PathVariable String id){
+    public ResponseEntity deleteProduct(@PathVariable String id) {
         boolean isDeleted = productServices.deleteProduct(id);
-        if(isDeleted)
+        if (isDeleted)
             return ResponseEntity.status(200).body(new ApiResponse("Product Deleted Successfully"));
 
         return ResponseEntity.status(400).body(new ApiResponse("Product ID Not Found"));
     }
-
-
-
-
-
-
-
-
 
 
 }

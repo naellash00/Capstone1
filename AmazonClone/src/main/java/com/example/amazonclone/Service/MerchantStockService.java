@@ -1,7 +1,9 @@
 package com.example.amazonclone.Service;
 
+import com.example.amazonclone.Model.Merchant;
 import com.example.amazonclone.Model.MerchantStock;
 import com.example.amazonclone.Model.Product;
+import com.example.amazonclone.Model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,13 +16,26 @@ public class MerchantStockService {
 
     private final MerchantService merchantServices;
     private final ProductService productServices;
+    private final UserService userServices;
 
     public ArrayList<MerchantStock> getMerchantStocks(){
         return merchantStocks;
     }
 
-    public void addMerchantStock(MerchantStock merchantStock){
-        merchantStocks.add(merchantStock);
+    public int addMerchantStock(MerchantStock merchantStock){
+        //1 -> incorrect productID 2-> incorrect merchantID 3-> true
+        for(Product product : productServices.getAllProducts()){
+            if(merchantStock.getProductID().equals(product.getId())){
+                for(Merchant merchant : merchantServices.getMerchants()){
+                    if(merchantStock.getMerchantID().equals(merchant.getId())){
+                        merchantStocks.add(merchantStock);
+                        return 3;
+                    }
+                    else return 2;
+                }
+            }
+        }
+        return 1;
     }
 
     public boolean updateMerchantStock(String id, MerchantStock merchantStock){
@@ -43,33 +58,33 @@ public class MerchantStockService {
         return false;
     }
 
-    public boolean addStockToProduct(String productID, String merchantID, int additionalStock){
-       // 1 -> ended successfully 2 -> incorrect IDs 3-> IDs not in merchant stock
-        for (int i = 0; i < productServices.getProducts().size(); i++) {
-            for (int j = 0; j < merchantServices.getMerchants().size(); j++) {
-                if(productServices.getProducts().get(i).getId().equals(productID)
-                        && merchantServices.getMerchants().get(j).getId().equals(merchantID)){
-                    for(MerchantStock ms : merchantStocks){
-                        if(ms.getProductID().equals(productID) && ms.getMerchantID().equals(merchantID)){
-                            ms.setStock(ms.getStock() + additionalStock);
-                           // return 1;
-                            return true;
-                        }
-                        //else  return 3;
-                    }
-                }
-            }
-        }
-        ///return 2;
-        return false;
-    }
+//    public boolean addStockToProduct(String productID, String merchantID, int additionalStock){
+//       // 1 -> ended successfully 2 -> incorrect IDs 3-> IDs not in merchant stock
+//        for (int i = 0; i < productServices.getAllProducts().size(); i++) {
+//            for (int j = 0; j < merchantServices.getMerchants().size(); j++) {
+//                if(productServices.getAllProducts().get(i).getId().equals(productID)
+//                        && merchantServices.getMerchants().get(j).getId().equals(merchantID)){
+//                    for(MerchantStock ms : merchantStocks){
+//                        if(ms.getProductID().equals(productID) && ms.getMerchantID().equals(merchantID)){
+//                            ms.setStock(ms.getStock() + additionalStock);
+//                           // return 1;
+//                            return true;
+//                        }
+//                        //else  return 3;
+//                    }
+//                }
+//            }
+//        }
+//        ///return 2;
+//        return false;
+//    }
 
     //pont 1. is product in stock or not
     public boolean isProductInStock(String productID, String merchantID){
         //1.check both IDs exist
-        for (int i = 0; i < productServices.getProducts().size(); i++) {
+        for (int i = 0; i < productServices.getAllProducts().size(); i++) {
             for (int j = 0; j < merchantServices.getMerchants().size(); j++) {
-                if(productServices.getProducts().get(i).getId().equals(productID)
+                if(productServices.getAllProducts().get(i).getId().equals(productID)
                         && merchantServices.getMerchants().get(i).getId().equals(merchantID)){
                     //2.check if they are in the merchant stock
                     for(MerchantStock ms : merchantStocks){
@@ -88,8 +103,77 @@ public class MerchantStockService {
         return false;
     }
 
-    //2.check if product id and merchant id are correct and inside the stock
-   
+
+   public boolean isValidProductID(String productID){
+        for(Product product : productServices.products){
+            if(product.getId().equals(productID)){
+                return true;
+            }
+        }
+        return false;
+   }
+
+   public boolean isValidMerchantID(String merchantID){
+        for(Merchant merchant : merchantServices.getMerchants()){
+            if(merchant.getId().equals(merchantID)){
+                return true;
+            }
+        }
+        return false;
+   }
+   public void reduceStock(String merchantID){
+        for(MerchantStock ms : merchantStocks){
+            if(ms.getMerchantID().equals(merchantID)){
+                ms.setStock(ms.getStock() - 1);
+            }
+        }
+   }
+
+    public int addStockToProduct(String productID, String merchantID, int additionalStock){
+       if(isValidProductID(productID)){
+           if(isValidMerchantID(merchantID)){
+               for(MerchantStock ms : merchantStocks){
+                   if(ms.getProductID().equals(productID) && ms.getMerchantID().equals(merchantID)){
+                       ms.setStock(ms.getStock() + additionalStock);
+                       return 4;
+                   }
+                   else return 3;
+
+               }
+           }
+           else return 2; // invalid merchant id
+       }
+       return 1; // incorrect product id
+    }
+
+public int buyProduct(String userID, String productID, String merchantID){
+       //check if all the given ids are valid or not
+        if(userServices.isValidUserID(userID) && isValidProductID(productID) && isValidMerchantID(merchantID)){
+           if(isValidProductID(productID)){
+               if(isValidMerchantID(merchantID)){
+
+                   //check if the merchant has the product in stock or return bad request.
+                   if(isProductInStock(productID, merchantID)){
+                       for(Product product : productServices.getAllProducts()){
+                           //if balance is less than the product price returns bad request.
+                           if(userServices.checkUserBalance(userID, product.getPrice())){
+                               //deducted the price of the product from the user balance.
+                               userServices.deductPriceFromUserBalance(userID, product.getPrice());
+                               //reduce the stock from the MerchantStock.
+                               reduceStock(merchantID);
+                               return 6; // successfully completed
+                           }
+                           else return 5; // bad request balance is not enough
+                       }
+                   }
+                   else return 4; // product out of stock
+               }
+               else return 3; // incorrect merchant id
+           }
+           else return 2; // incorrect product id
+       }
+        return 1; // incorrect user IDs
+}
 
 
 
