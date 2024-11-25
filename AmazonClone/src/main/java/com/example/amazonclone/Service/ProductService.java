@@ -1,9 +1,6 @@
 package com.example.amazonclone.Service;
 
-import com.example.amazonclone.Model.Category;
-import com.example.amazonclone.Model.MerchantStock;
-import com.example.amazonclone.Model.Product;
-import com.example.amazonclone.Model.User;
+import com.example.amazonclone.Model.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,14 +12,15 @@ public class ProductService {
 
     ArrayList<Product> products = new ArrayList<>();
     private final CategoryService categoryServices;
+    private final MerchantService merchantServices;
 
     public ArrayList<Product> getAllProducts() {
         return products;
     }
 
     public boolean addProduct(Product product) {
-        for(Category category : categoryServices.getCategories()){
-            if(product.getCategoryID().equals(category.getId())){
+        for (Category category : categoryServices.getCategories()) {
+            if (product.getCategoryID().equals(category.getId())) {
                 products.add(product);
                 return true;
             }
@@ -48,6 +46,31 @@ public class ProductService {
             }
         }
         return false;
+    }
+
+    public int applyDiscount(String merchantID, String productID, double discountPercentage) {
+        for (Merchant merchant : merchantServices.getMerchants()) {
+            if (merchant.getId().equals(merchantID)) {
+                for (Product product : products) {
+                    if (product.getId().equals(productID)) {
+                        product.setPrice(product.getPrice() - (product.getPrice() * (discountPercentage / 100)));
+                        return 3; // discount applied
+                    }
+                }
+                return 2; // product id incorrect
+            }
+        }
+        return 1; //merchant id incorrect
+    }
+
+    public ArrayList<Product> getProductsByCategory(String categoryID) {
+        ArrayList<Product> sameProductCategory = new ArrayList<>();
+        for (Product product : products) {
+            if (product.getCategoryID().equals(categoryID)) {
+                sameProductCategory.add(product);
+            }
+        }
+        return sameProductCategory;
     }
 
 }

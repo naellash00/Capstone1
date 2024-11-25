@@ -39,7 +39,7 @@ public class MerchantService {
         return false;
     }
 
-    //point 1. check if merchant is in stock or not
+
 
 
 }
