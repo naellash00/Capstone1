@@ -1,11 +1,14 @@
 package com.example.amazonclone.Model;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+
+import java.util.ArrayList;
 
 @Data
 @AllArgsConstructor
@@ -23,5 +26,10 @@ public class Product {
 
     @NotEmpty(message = "Category ID Cannot Be Empty")
     private String categoryID;
+
+    // review can be empty
+    //@Size(min = 5, message = "Review Cannot Be Less Than 5 Letters")
+    @Valid
+    private ArrayList<String> reviews = new ArrayList<>();
 
 }

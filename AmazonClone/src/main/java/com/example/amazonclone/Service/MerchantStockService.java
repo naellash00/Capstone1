@@ -169,9 +169,5 @@ public class MerchantStockService {
         return 2; //product id not in stock
     }
 
-//    public ArrayList<Product> getPurchaseHistory(String userID){
-//
-//    }
-
 
 }

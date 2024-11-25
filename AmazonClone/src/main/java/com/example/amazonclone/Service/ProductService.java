@@ -13,6 +13,7 @@ public class ProductService {
     ArrayList<Product> products = new ArrayList<>();
     private final CategoryService categoryServices;
     private final MerchantService merchantServices;
+    private final UserService userService;
 
     public ArrayList<Product> getAllProducts() {
         return products;
@@ -72,6 +73,39 @@ public class ProductService {
         }
         return sameProductCategory;
     }
+
+    public int addReview(String productID, String userID, String review) {
+        boolean productIDFound = false;
+        boolean userIDFound = false;
+        //check product id
+        for (Product product : products) {
+            if (product.getId().equals(productID)) {
+                productIDFound = true;
+
+                // check user id
+                for (User user : userService.getUsers()) {
+                    if (user.getId().equals(userID)) {
+                        userIDFound = true;
+
+                        if (review.length() >= 5) {
+                            // empty list issue
+                            if (product.getReviews() == null) {
+                                product.setReviews(new ArrayList<>());
+                            }
+
+                            product.getReviews().add(review);
+                            return 0;
+                        }
+                        return 3; // review length must be longer than 5
+                    }
+
+                }
+                return 2; //user id not found
+            }
+        }
+        return 1; //produc id not found
+    }
+
 
 }
 
