@@ -21,6 +21,6 @@ public class Product {
     @Min(value = 0, message = "Price Cannot Be Less Than Zero")
     private double price;
 
-    @NotNull(message = "Category ID Cannot Be Empty")
-    private Category categoryID;
+    @NotEmpty(message = "Category ID Cannot Be Empty")
+    private String categoryID;
 }

@@ -39,4 +39,31 @@ public class UserService {
         return false;
     }
 
+    public boolean isValidUserID(String userID){
+        for(User user : users){
+            if(user.getId().equals(userID)){
+                return true;
+            }
+        }
+        return false;
+    }
+    public boolean checkUserBalance(String userID, double amount){
+        for(User user : users){
+            if(user.getId().equals(userID)){
+                if(user.getBalance() >= amount){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public void deductPriceFromUserBalance(String userID, double productPrice){
+        for(User user : users){
+            if(user.getId().equals(userID)){
+                user.setBalance(user.getBalance() - productPrice);
+            }
+        }
+    }
+
 }

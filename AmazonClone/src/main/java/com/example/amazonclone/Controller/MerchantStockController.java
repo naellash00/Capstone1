@@ -29,8 +29,14 @@ public class MerchantStockController {
         if(errors.hasErrors())
             return ResponseEntity.status(400).body(errors.getFieldError().getDefaultMessage());
 
-        merchantStockServices.addMerchantStock(merchantStock);
+        int result = merchantStockServices.addMerchantStock(merchantStock);
+        if(result == 3)
         return ResponseEntity.status(200).body(new ApiResponse("Merchant Stock Added Successfully"));
+
+        else if(result == 2)
+        return ResponseEntity.status(400).body(new ApiResponse("Incorrect Merchant ID"));
+
+        return ResponseEntity.status(400).body(new ApiResponse("Incorrect Product ID"));
     }
 
 
@@ -57,16 +63,43 @@ public class MerchantStockController {
 
     @PutMapping("/add/product/stock/{productid}/{merchantid}/{additionalstock}")
     public ResponseEntity addStockToProduct(@PathVariable String productid, @PathVariable String merchantid, @PathVariable int additionalstock){
-        //int result = merchantStockServices.addStockToProduct(productID, merchantID, additionalStock);
-        boolean stockIsUpdated = merchantStockServices.addStockToProduct(productid, merchantid, additionalstock);
-        if(stockIsUpdated){
-            return ResponseEntity.status(200).body(new ApiResponse("Additional Product Stock Added Successfully"));
+        int result = merchantStockServices.addStockToProduct(productid, merchantid, additionalstock);
+        //boolean stockIsUpdated = merchantStockServices.addStockToProduct(productid, merchantid, additionalstock);
+        if(result == 1){
+            return ResponseEntity.status(400).body(new ApiResponse("Incorrect Product ID"));
+        } else if(result == 2){
+            return ResponseEntity.status(400).body(new ApiResponse("Incorrect Merchant ID"));
         }
+        else if(result == 3)
+            return ResponseEntity.status(400).body(new ApiResponse("Product and Merchant Not In stock"));
 
-        return ResponseEntity.status(400).body(new ApiResponse("Product ID and Merchant ID Not Found"));
+        return ResponseEntity.status(200).body(new ApiResponse("Additional Product Stock Added Successfully"));
     }
 
+   //1. extra endpoint 1
+    @GetMapping("/in/stock/{productid}/{merchantid}")
+    public ResponseEntity isProductInStock(@PathVariable String productid, @PathVariable String merchantid){
+        if(merchantStockServices.isProductInStock(productid, merchantid)){
+            return ResponseEntity.status(200).body(new ApiResponse("Product Is In Stock"));
+        }
+        return ResponseEntity.status(400).body(new ApiResponse("Product Is Out Of Stock"));
+    }
 
+    @GetMapping("/buy/product/{userid}/{productid}/{merchantid}")
+    public ResponseEntity buyProduct(@PathVariable String userid, @PathVariable String productid, @PathVariable String merchantid){
+        int result = merchantStockServices.buyProduct(userid, productid, merchantid);
+        if(result == 1)
+            return ResponseEntity.status(400).body(new ApiResponse("Incorrect User IDs"));
+        else if(result == 2)
+            return ResponseEntity.status(400).body(new ApiResponse("Incorrect Product ID"));
+        else if(result == 3)
+            return ResponseEntity.status(400).body(new ApiResponse("Incorrect Merchant ID"));
+        else if(result == 4)
+            return ResponseEntity.status(400).body(new ApiResponse("Product Out Of Stock"));
+        else if(result == 5)
+            return ResponseEntity.status(400).body(new ApiResponse("Balance Not Enough"));
 
+        return ResponseEntity.status(200).body(new ApiResponse("Product Bought Successfully"));
+    }
 
 }
