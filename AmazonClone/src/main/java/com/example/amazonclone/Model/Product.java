@@ -27,9 +27,7 @@ public class Product {
     @NotEmpty(message = "Category ID Cannot Be Empty")
     private String categoryID;
 
-    // review can be empty
-    //@Size(min = 5, message = "Review Cannot Be Less Than 5 Letters")
-    @Valid
-    private ArrayList<String> reviews = new ArrayList<>();
+
+    private ArrayList<String> reviews;
 
 }

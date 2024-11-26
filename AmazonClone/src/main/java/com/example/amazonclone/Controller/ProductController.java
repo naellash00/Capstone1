@@ -68,7 +68,7 @@ public class ProductController {
         return ResponseEntity.status(200).body(new ApiResponse("Discount Applied Successfully"));
     }
 
-    //Extra endpoint 3
+    //Extra Endpoint 3
     @GetMapping("/same/product/category/{categoryid}")
     public ResponseEntity getProductsByCategory(@PathVariable String categoryid) {
         ArrayList<Product> sameCategoryProducts = productServices.getProductsByCategory(categoryid);
@@ -93,7 +93,14 @@ public class ProductController {
 
     }
 
-
+    @GetMapping("/reviews/{productid}")
+    public ResponseEntity getProductReviews(@PathVariable String productid) {
+        ArrayList<String> reviews = productServices.getProductReviews(productid);
+        if (reviews == null) {
+            return ResponseEntity.status(400).body(new ApiResponse("Product ID Not Found"));
+        }
+        return ResponseEntity.status(200).body(reviews);
+    }
 
 
 }

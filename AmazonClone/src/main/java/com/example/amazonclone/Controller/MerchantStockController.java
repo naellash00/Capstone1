@@ -64,7 +64,6 @@ public class MerchantStockController {
     @PutMapping("/add/product/stock/{productid}/{merchantid}/{additionalstock}")
     public ResponseEntity addStockToProduct(@PathVariable String productid, @PathVariable String merchantid, @PathVariable int additionalstock) {
         int result = merchantStockServices.addStockToProduct(productid, merchantid, additionalstock);
-        //boolean stockIsUpdated = merchantStockServices.addStockToProduct(productid, merchantid, additionalstock);
         if (result == 1) {
             return ResponseEntity.status(400).body(new ApiResponse("Incorrect Product ID"));
         } else if (result == 2) {
@@ -75,7 +74,7 @@ public class MerchantStockController {
         return ResponseEntity.status(200).body(new ApiResponse("Additional Product Stock Added Successfully"));
     }
 
-    //1. extra endpoint 1
+    //Extra Endpoint 1
     @GetMapping("/in/stock/{productid}/{merchantid}")
     public ResponseEntity isProductInStock(@PathVariable String productid, @PathVariable String merchantid) {
         if (merchantStockServices.isProductInStock(productid, merchantid)) {
@@ -101,6 +100,7 @@ public class MerchantStockController {
         return ResponseEntity.status(200).body(new ApiResponse("Product Bought Successfully"));
     }
 
+    //Extra Endpoint 4
     @PutMapping("/update/price/{productid}/{merchantid}/{newprice}")
     public ResponseEntity updateProductPrice(@PathVariable String productid, @PathVariable String merchantid, @PathVariable double newprice) {
         int updateProductPriceResult = merchantStockServices.updateProductPrice(productid, merchantid, newprice);

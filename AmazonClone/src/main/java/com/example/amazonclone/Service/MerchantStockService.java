@@ -59,11 +59,11 @@ public class MerchantStockService {
     }
 
 
-    //pont 1. is product in stock or not
+    //Extra endpoint 1
     public boolean isProductInStock(String productID, String merchantID) {
         //1.check both IDs exist
-        for (int i = 0; i < productServices.getAllProducts().size(); i++) {
-            for (int j = 0; j < merchantServices.getMerchants().size(); j++) {
+        for (int i = 0; i < productServices.getAllProducts().size(); i++)
+            for (int j = 0; j < merchantServices.getMerchants().size(); j++)
                 if (productServices.getAllProducts().get(i).getId().equals(productID)
                         && merchantServices.getMerchants().get(i).getId().equals(merchantID)) {
                     //2.check if they are in the merchant stock
@@ -76,9 +76,6 @@ public class MerchantStockService {
                         }
                     }
                 }
-            }
-
-        }
 
         return false;
     }

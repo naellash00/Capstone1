@@ -75,24 +75,17 @@ public class ProductService {
     }
 
     public int addReview(String productID, String userID, String review) {
-        boolean productIDFound = false;
-        boolean userIDFound = false;
         //check product id
         for (Product product : products) {
             if (product.getId().equals(productID)) {
-                productIDFound = true;
-
                 // check user id
                 for (User user : userService.getUsers()) {
                     if (user.getId().equals(userID)) {
-                        userIDFound = true;
-
                         if (review.length() >= 5) {
                             // empty list issue
                             if (product.getReviews() == null) {
                                 product.setReviews(new ArrayList<>());
                             }
-
                             product.getReviews().add(review);
                             return 0;
                         }
@@ -103,9 +96,17 @@ public class ProductService {
                 return 2; //user id not found
             }
         }
-        return 1; //produc id not found
+        return 1; //product id not found
     }
 
+    public ArrayList<String> getProductReviews(String productID) {
+        for (Product product : products) {
+            if (product.getId().equals(productID)) {
+                return product.getReviews(); // return  list
+            }
+        }
+        return null; //  product not found
+    }
 
 }
 
