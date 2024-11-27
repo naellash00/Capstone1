@@ -2,7 +2,7 @@ package com.example.amazonclone.Controller;
 
 import com.example.amazonclone.ApiResponse.ApiResponse;
 import com.example.amazonclone.Model.MerchantStock;
-import com.example.amazonclone.Service.MerchantService;
+import com.example.amazonclone.Model.Product;
 import com.example.amazonclone.Service.MerchantStockService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -74,20 +74,13 @@ public class MerchantStockController {
         return ResponseEntity.status(200).body(new ApiResponse("Additional Product Stock Added Successfully"));
     }
 
-    //Extra Endpoint 1
-    @GetMapping("/in/stock/{productid}/{merchantid}")
-    public ResponseEntity isProductInStock(@PathVariable String productid, @PathVariable String merchantid) {
-        if (merchantStockServices.isProductInStock(productid, merchantid)) {
-            return ResponseEntity.status(200).body(new ApiResponse("Product Is In Stock"));
-        }
-        return ResponseEntity.status(400).body(new ApiResponse("Product Is Out Of Stock"));
-    }
+
 
     @GetMapping("/buy/product/{userid}/{productid}/{merchantid}")
     public ResponseEntity buyProduct(@PathVariable String userid, @PathVariable String productid, @PathVariable String merchantid) {
         int result = merchantStockServices.buyProduct(userid, productid, merchantid);
         if (result == 1)
-            return ResponseEntity.status(400).body(new ApiResponse("Incorrect User IDs"));
+            return ResponseEntity.status(400).body(new ApiResponse("Incorrect User ID"));
         else if (result == 2)
             return ResponseEntity.status(400).body(new ApiResponse("Incorrect Product ID"));
         else if (result == 3)
@@ -100,16 +93,13 @@ public class MerchantStockController {
         return ResponseEntity.status(200).body(new ApiResponse("Product Bought Successfully"));
     }
 
-    //Extra Endpoint 4
-    @PutMapping("/update/price/{productid}/{merchantid}/{newprice}")
-    public ResponseEntity updateProductPrice(@PathVariable String productid, @PathVariable String merchantid, @PathVariable double newprice) {
-        int updateProductPriceResult = merchantStockServices.updateProductPrice(productid, merchantid, newprice);
-        if (updateProductPriceResult == 1)
-            return ResponseEntity.status(400).body(new ApiResponse("Only Merchant Can Update Price"));
-        else if (updateProductPriceResult == 2)
-            return ResponseEntity.status(400).body(new ApiResponse("Product ID Not Found In Stock"));
-
-        return ResponseEntity.status(200).body(new ApiResponse("Product Price Updated Successfully"));
+    //Extra Endpoint 3
+    @GetMapping("/purchase/list/{userid}")
+    public ResponseEntity getUserPurchaseHistory(@PathVariable String userid){
+        ArrayList<Product> userPurchases = merchantStockServices.getUserPurchaseHistory(userid);
+        if(userPurchases.isEmpty())
+            return ResponseEntity.status(400).body(new ApiResponse("No Purchases Made"));
+        return ResponseEntity.status(200).body(userPurchases);
     }
 
 

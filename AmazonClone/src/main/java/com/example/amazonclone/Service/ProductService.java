@@ -10,10 +10,12 @@ import java.util.ArrayList;
 @RequiredArgsConstructor
 public class ProductService {
 
+
     ArrayList<Product> products = new ArrayList<>();
     private final CategoryService categoryServices;
     private final MerchantService merchantServices;
     private final UserService userService;
+
 
     public ArrayList<Product> getAllProducts() {
         return products;
