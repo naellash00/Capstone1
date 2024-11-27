@@ -3,6 +3,7 @@ package com.example.amazonclone.Service;
 import com.example.amazonclone.Model.Merchant;
 import com.example.amazonclone.Model.MerchantStock;
 import com.example.amazonclone.Model.Product;
+import com.example.amazonclone.Model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

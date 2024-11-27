@@ -68,15 +68,6 @@ public class ProductController {
         return ResponseEntity.status(200).body(new ApiResponse("Discount Applied Successfully"));
     }
 
-    //Extra Endpoint 3
-    @GetMapping("/same/product/category/{categoryid}")
-    public ResponseEntity getProductsByCategory(@PathVariable String categoryid) {
-        ArrayList<Product> sameCategoryProducts = productServices.getProductsByCategory(categoryid);
-        if (sameCategoryProducts.isEmpty())
-            return ResponseEntity.status(400).body(new ApiResponse("Category ID Not Found"));
-
-        return ResponseEntity.status(200).body(sameCategoryProducts);
-    }
 
     //Extra Endpoint 5
     @PostMapping("/add/review/{productid}/{userid}/{review}")
@@ -100,6 +91,18 @@ public class ProductController {
             return ResponseEntity.status(400).body(new ApiResponse("Product ID Not Found"));
         }
         return ResponseEntity.status(200).body(reviews);
+    }
+
+    //Extra Endpoint 5
+    @PutMapping("/add/favorite/{userid}/{productid}")
+    public ResponseEntity addProductToFavorite(@PathVariable String userid, @PathVariable String productid) {
+        int addToFavoriteResult = productServices.addProductToFavorite(userid, productid);
+        if (addToFavoriteResult == 1)
+            return ResponseEntity.status(400).body(new ApiResponse("Product Already In Favorites"));
+        else if (addToFavoriteResult == 3)
+            return ResponseEntity.status(400).body(new ApiResponse("Invalid User ID"));
+
+        return ResponseEntity.status(200).body(new ApiResponse("Product Added To Favorites"));
     }
 
 

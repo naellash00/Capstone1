@@ -35,4 +35,6 @@ public class User {
     @Min(value = 0, message = "Balance Cannot Be Less Than Zero")
     private double balance;
 
+    ArrayList<Product> favoriteProducts = new ArrayList<>();
+
 }

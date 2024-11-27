@@ -2,13 +2,16 @@ package com.example.amazonclone.Service;
 
 import com.example.amazonclone.Model.Product;
 import com.example.amazonclone.Model.User;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 
 @Service
 public class UserService {
+
     ArrayList<User> users = new ArrayList<>();
+
 
     public ArrayList<User> getUsers() {
         return users;
@@ -66,7 +69,6 @@ public class UserService {
         }
     }
 
-
     public int sendGift(String senderUserID, String receiverUsername, double moneyGiftAmount) {
         boolean canSend = false;
         for (User user : users) {
@@ -91,6 +93,9 @@ public class UserService {
         }
         return 4; //incorrect username
     }
+
+
+
 
 
 }

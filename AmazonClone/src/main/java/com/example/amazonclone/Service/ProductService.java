@@ -66,15 +66,6 @@ public class ProductService {
         return 1; //merchant id incorrect
     }
 
-    public ArrayList<Product> getProductsByCategory(String categoryID) {
-        ArrayList<Product> sameProductCategory = new ArrayList<>();
-        for (Product product : products) {
-            if (product.getCategoryID().equals(categoryID)) {
-                sameProductCategory.add(product);
-            }
-        }
-        return sameProductCategory;
-    }
 
     public int addReview(String productID, String userID, String review) {
         //check product id
@@ -109,6 +100,52 @@ public class ProductService {
         }
         return null; //  product not found
     }
+
+    public Product findProduct(String productID) {
+        for (Product product : products) {
+            if (product.getId().equals(productID)) {
+                return product;
+            }
+        }
+        return null;
+    }
+
+    public int addProductToFavorite(String userID, String productID) {
+        for (User user : userService.getUsers()) {
+            if (user.getId().equals(userID)) {
+                //empty list issue
+                if (user.getFavoriteProducts() == null) {
+                    user.setFavoriteProducts(new ArrayList<>());
+                }
+
+
+                for (Product product : user.getFavoriteProducts()) {
+
+                    if (product.getId().equals(productID))
+                        return 1; // product already in favorites
+                }
+
+                Product productToAdd = findProduct(productID);
+
+                if (productToAdd != null) {
+                    user.getFavoriteProducts().add(productToAdd);
+                    return 2; //product added successfully
+                }
+
+            }
+        }
+        return 3; //invalid user id
+    }
+
+    public ArrayList<Product> getUserFavoriteProducts(String userID) {
+        for (User user : userService.getUsers()) {
+            if (user.getId().equals(userID)) {
+                return user.getFavoriteProducts();
+            }
+        }
+        return new ArrayList<>(); // User not found
+    }
+
 
 }
 

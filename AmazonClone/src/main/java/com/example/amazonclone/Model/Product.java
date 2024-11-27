@@ -28,6 +28,6 @@ public class Product {
     private String categoryID;
 
     private ArrayList<String> reviews;
-    private String favorite;
+
 
 }
