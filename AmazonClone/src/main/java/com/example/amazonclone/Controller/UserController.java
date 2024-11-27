@@ -55,4 +55,19 @@ public class UserController {
         return ResponseEntity.status(400).body(new ApiResponse(" User ID Not Found"));
     }
 
+    //Extra Endpoint 4
+    @PutMapping("/send/gift/{senderuserid}/{receiverusername}/{moneygiftamount}")
+    public ResponseEntity sendGift(@PathVariable String senderuserid, @PathVariable String receiverusername, @PathVariable double moneygiftamount){
+        int sendingGiftResult = userServices.sendGift(senderuserid, receiverusername, moneygiftamount);
+        if(sendingGiftResult == 1)
+            return ResponseEntity.status(400).body(new ApiResponse("User ID Not Found"));
+        else if(sendingGiftResult == 2)
+            return ResponseEntity.status(400).body(new ApiResponse("Your Balance Not Enough"));
+        else if(sendingGiftResult == 4)
+            return ResponseEntity.status(400).body(new ApiResponse("Incorrect Username"));
+
+        return ResponseEntity.status(200).body(new ApiResponse("Gift Sent Successfully"));
+
+    }
+
 }
